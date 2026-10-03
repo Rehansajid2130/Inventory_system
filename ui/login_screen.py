@@ -41,10 +41,10 @@ class LoginScreen(ctk.CTkFrame):
             draw.rounded_rectangle((0, 0, img.size[0], img.size[1]), radius=30, fill=255)
             img.putalpha(mask)
             
-            bg_image = ctk.CTkImage(img, size=(380, 420)) 
-            ctk.CTkLabel(left_panel, image=bg_image, text="").pack(pady=20, expand=True)
-        except Exception:
-            pass
+            self.bg_image = ctk.CTkImage(light_image=img, dark_image=img, size=(380, 420)) 
+            ctk.CTkLabel(left_panel, image=self.bg_image, text="").pack(pady=20, expand=True)
+        except Exception as e:
+            print(f"Warning: Could not load login image: {e}")
 
         # ---------------- RIGHT SIDE ----------------
         right_panel = ctk.CTkFrame(main_card, corner_radius=20, fg_color="white")
