@@ -2,6 +2,7 @@ import customtkinter as ctk
 from tkinter import ttk, messagebox
 import database as db
 import inventory as inv
+from ui.theme_helper import apply_table_theme
 
 
 class CashierView(ctk.CTkFrame):
@@ -36,9 +37,10 @@ class CashierView(ctk.CTkFrame):
                                            width=100, height=40, corner_radius=10, fg_color=("white", "gray25"), 
                                            button_color=("#e5e7eb", "gray35"), button_hover_color=("#d1d5db", "gray40"), 
                                            text_color=("#374151", "#f9fafb"))
-        self.theme_menu.set("Light")
+        cur_mode = ctk.get_appearance_mode().capitalize()
+        self.theme_menu.set(cur_mode if cur_mode in ["Light", "Dark"] else "Light")
         self.theme_menu.pack(side="right", padx=10)
-        self._set_theme("Light") # Initial style setup
+        self._set_theme(self.theme_menu.get()) # Initial style setup
         
         ctk.CTkLabel(hdr, text=f"👤 {self.user['username']}", font=("Arial", 14, "bold"), text_color="gray").pack(side="right", padx=(0, 10))
 
@@ -80,9 +82,7 @@ class CashierView(ctk.CTkFrame):
         table_container = ctk.CTkFrame(left_card, fg_color="transparent")
         table_container.pack(fill="both", expand=True, padx=25, pady=(0, 15))
         
-        style = ttk.Style()
-        style.configure("Treeview", rowheight=42, font=("Arial", 14))
-        style.configure("Treeview.Heading", font=("Arial", 15, "bold"))
+        apply_table_theme()
 
         cols = ("pid", "name", "category", "size", "price", "stock")
         self.tree = ttk.Treeview(table_container, columns=cols, show="headings", selectmode="browse")
@@ -286,19 +286,5 @@ class CashierView(ctk.CTkFrame):
         ReturnDialog(self, self.user["username"], on_refund_success=self._refresh)
 
     def _set_theme(self, mode):
-        ctk.set_appearance_mode(mode)
-        # Update Treeview style for Ttk
-        style = ttk.Style()
-        if mode == "Dark":
-            bg, fg = "#2b2b2b", "white"
-        elif mode == "Light":
-            bg, fg = "white", "black"
-        else: # System
-            appearance = ctk.get_appearance_mode()
-            bg = "#2b2b2b" if appearance == "Dark" else "white"
-            fg = "white" if appearance == "Light" else "black"
-            
-        style.configure("Treeview", background=bg, foreground=fg, fieldbackground=bg, borderwidth=0)
-        style.map("Treeview", background=[("selected", "#36dac5")], foreground=[("selected", "white")])
-        style.configure("Treeview.Heading", background=("#f3f4f6" if mode=="Light" else "#333333"))
+        apply_table_theme(mode)
 

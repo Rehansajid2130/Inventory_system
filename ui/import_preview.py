@@ -1,5 +1,6 @@
 import customtkinter as ctk
 from tkinter import ttk, messagebox
+from ui.theme_helper import apply_table_theme
 
 class ImportPreviewDialog(ctk.CTkToplevel):
     def __init__(self, parent, items, new_categories, on_confirm):
@@ -43,9 +44,7 @@ class ImportPreviewDialog(ctk.CTkToplevel):
         table_frame = ctk.CTkFrame(self.container, fg_color="transparent")
         table_frame.pack(fill="both", expand=True, padx=40, pady=20)
 
-        style = ttk.Style()
-        style.configure("Preview.Treeview", rowheight=35, font=("Arial", 12))
-        style.configure("Preview.Treeview.Heading", font=("Arial", 13, "bold"))
+        apply_table_theme()
 
         cols = ("name", "category", "size", "price", "stock", "status")
         self.tree = ttk.Treeview(table_frame, columns=cols, show="headings", style="Preview.Treeview")

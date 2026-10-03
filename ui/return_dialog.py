@@ -2,6 +2,7 @@ import customtkinter as ctk
 import tkinter.messagebox as messagebox
 from tkinter import ttk
 import database as db
+from ui.theme_helper import apply_table_theme
 
 class ReturnDialog(ctk.CTkToplevel):
     def __init__(self, master, current_username, on_refund_success=None):
@@ -94,16 +95,7 @@ class ReturnDialog(ctk.CTkToplevel):
         self._set_theme(ctk.get_appearance_mode())
 
     def _set_theme(self, mode):
-        # Update Treeview style for Ttk
-        style = ttk.Style()
-        if mode == "Dark":
-            bg, fg = "#2b2b2b", "white"
-        else:
-            bg, fg = "white", "black"
-            
-        style.configure("Treeview", background=bg, foreground=fg, fieldbackground=bg, borderwidth=0)
-        style.map("Treeview", background=[("selected", "#36dac5")], foreground=[("selected", "white")])
-        style.configure("Treeview.Heading", background=("#f3f4f6" if mode=="Light" else "#333333"))
+        apply_table_theme(mode)
 
     def _search_invoice(self):
         inv_num = self.search_entry.get().strip()

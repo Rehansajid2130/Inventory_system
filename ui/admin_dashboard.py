@@ -4,6 +4,7 @@ import database as db
 import inventory as inv
 import auth
 from ui.import_preview import ImportPreviewDialog
+from ui.theme_helper import apply_table_theme
 
 
 class AdminDashboard(ctk.CTkFrame):
@@ -48,9 +49,10 @@ class AdminDashboard(ctk.CTkFrame):
         
         # Appearance Mode Menu
         self.theme_menu = ctk.CTkOptionMenu(sb, values=["Light", "Dark", "System"], command=self._set_theme)
-        self.theme_menu.set("Light")
+        cur_mode = ctk.get_appearance_mode().capitalize()
+        self.theme_menu.set(cur_mode if cur_mode in ["Light", "Dark"] else "Light")
         self.theme_menu.pack(side="bottom", fill="x", padx=12, pady=(0, 5))
-        self._set_theme("Light") # Initial style setup
+        self._set_theme(self.theme_menu.get()) # Initial style setup
 
     def _build_content(self):
         self.content = ctk.CTkFrame(self, fg_color="transparent")
@@ -120,10 +122,7 @@ class AdminDashboard(ctk.CTkFrame):
         table_frame = ctk.CTkFrame(main_card, fg_color="transparent")
         table_frame.pack(fill="both", expand=True, padx=30, pady=(0, 10))
         
-        # Ensure row height and font are set globally or here
-        style = ttk.Style()
-        style.configure("Treeview", rowheight=42, font=("Arial", 14))
-        style.configure("Treeview.Heading", font=("Arial", 16, "bold"))
+        apply_table_theme()
         
         cols = ("pid", "name", "category", "size", "price", "stock", "date")
         self.tree = ttk.Treeview(table_frame, columns=cols, show="headings", selectmode="extended")
@@ -540,7 +539,6 @@ class AdminDashboard(ctk.CTkFrame):
         from tkinter import filedialog
         path = filedialog.asksaveasfilename(defaultextension=".db", filetypes=[("SQLite DB", "*.db")])
         if path:
-            import db_backup as backup_util # existing or internal
             # Using internal database backup logic
             import shutil
             try:
@@ -746,18 +744,4 @@ class AdminDashboard(ctk.CTkFrame):
             messagebox.showerror("Error", f"Failed to export: {e}")
 
     def _set_theme(self, mode):
-        ctk.set_appearance_mode(mode)
-        # Update Treeview style for Ttk
-        style = ttk.Style()
-        if mode == "Dark":
-            bg, fg = "#2b2b2b", "white"
-        elif mode == "Light":
-            bg, fg = "white", "black"
-        else: # System
-            appearance = ctk.get_appearance_mode()
-            bg = "#2b2b2b" if appearance == "Dark" else "white"
-            fg = "white" if appearance == "Light" else "black"
-            
-        style.configure("Treeview", background=bg, foreground=fg, fieldbackground=bg, borderwidth=0)
-        style.map("Treeview", background=[("selected", "#36dac5")], foreground=[("selected", "white")])
-        style.configure("Treeview.Heading", background=("#f3f4f6" if mode=="Light" else "#333333"))
+        apply_table_theme(mode)

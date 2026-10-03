@@ -30,6 +30,7 @@ import auth
 from ui.login_screen import LoginScreen
 from ui.admin_dashboard import AdminDashboard
 from ui.cashier_view import CashierView
+from ui.theme_helper import apply_table_theme
 
 
 class App(ctk.CTk):
@@ -41,6 +42,7 @@ class App(ctk.CTk):
         self.after(200, lambda: self.state('zoomed')) # Maximized window
         ctk.set_appearance_mode("light")
         ctk.set_default_color_theme("blue")
+        apply_table_theme("Light")
 
         db.init_db()
         auth.seed_god_user()
