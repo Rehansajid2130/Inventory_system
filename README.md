@@ -1,51 +1,92 @@
-# Inventory Manager — Cloth & Jewelry Shop
+# Inventory Management System
 
-A fast, offline desktop inventory management system built with Python, CustomTkinter, and SQLite.
+A fast, offline desktop Point-of-Sale (POS) and inventory management application built with Python, CustomTkinter, and SQLite. Features automated PDF invoice generation, sales analytics, return & refund workflows, stock tracking, and complete audit logging.
 
-## Setup
+---
 
+## Quick Start
+
+### 1. One-Click Setup (Windows)
+Double-click **`RunMe.bat`** in the project directory. It verifies your Python environment, installs dependencies, and launches the app automatically.
+
+### 2. Manual Setup via Terminal
 ```bash
+# Install required packages
 pip install -r requirements.txt
+
+# Launch the application
 python main.py
 ```
 
+---
+
 ## Default Credentials
 
-| Username | Password        | Role  |
-|----------|-----------------|-------|
-| admin    | admin123        | Admin |
-| god      | god@admin2025   | God   |
+| Username | Password | Role | Description |
+|:---|:---|:---|:---|
+| **admin** | `admin123` | **Admin** | Full system access: inventory, sales analytics, cashier management, database backups |
+| **god** | `god@admin2025` | **God** | Emergency maintenance access: ability to reset any user password |
 
-**Change these passwords immediately after first login.**
+> **Security Note:** Change these default passwords immediately after your first login.
+
+---
 
 ## Features
 
-- **Checkout & Invoice**: Cashier builds a shopping cart, completes a sale, and generates a printable PDF invoice with itemized products, prices, and totals
-- **Sales Dashboard**: Admin can view revenue summaries (today/week/month/all time), top-selling items, worst-selling items, recent transactions, and low stock alerts
-- **Stock Management**: Track inventory quantities — stock is automatically deducted on checkout with safeguards against overselling
-- **Inventory**: Add, edit, delete, search, sort, filter items by category
-- **Categories**: Create, edit, delete categories
-- **Users**: Admin can create/delete cashier accounts
-- **Roles**: Admin (full access), Cashier (checkout & view), God (emergency recovery)
-- **Export**: CSV export of inventory (includes stock levels)
-- **Backup/Restore**: Full database backup and restore
-- **Security**: PBKDF2-hashed passwords, role-based access, stock validation in transactions
+### 🛒 Cashier POS & Checkout
+- **Interactive Product Catalog**: Instant search by item name/ID and category filter dropdown.
+- **Cart System**: Add items, select sizes (e.g. S, M, L, XL, na), adjust quantities, and view live subtotal & tax totals.
+- **PDF Invoice Generation**: Completing a sale automatically reduces stock, records the transaction, and generates a printable itemized PDF receipt saved in `invoices/`.
+- **Returns & Refunds**: Look up receipts by invoice number to process full or partial item returns, automatically restocking inventory.
+
+### 📊 Admin Intelligence & Dashboard
+- **Sales Analytics**: View revenue summaries and transaction counts for Today, This Week, This Month, and All-Time.
+- **Product Insights**: Track Top-Selling items, Worst-Selling items, and Recent Transactions.
+- **Low Stock Threshold Alerts**: Automated visual alerts for products with stock below threshold levels.
+- **Audit Logging**: Timestamped logging of user actions (logins, sales, edits, deletions, and refunds) with CSV export capability.
+
+### 📦 Inventory & Category Management
+- **Item CRUD**: Add, edit, and bulk-delete items with fields: Name, Category, Size, Price, and Stock Quantity.
+- **Interactive CSV Import Preview**: Bulk import products with a preview table displaying new items vs stock updates, with automatic category generation.
+- **Data Export**: Export inventory items and audit logs directly to CSV files.
+- **Backup & Restore**: Create SQLite database snapshots and restore them directly from the admin panel.
+
+### 🎨 Theme & Appearance
+- **Light & Dark Mode**: Dynamic theme switcher (Light / Dark / System) with custom-styled tables and UI cards.
+
+---
 
 ## Project Structure
 
+```text
+inventory1_app/
+├── assets/                     # Login graphics and pattern assets
+│   ├── desk_pattern.png
+│   └── login_bg.png
+├── invoices/                   # Generated PDF customer receipts
+├── ui/                         # Modular CustomTkinter interface components
+│   ├── admin_dashboard.py      # Admin control panel, metrics & catalog management
+│   ├── cashier_view.py         # POS cashier terminal & shopping cart
+│   ├── import_preview.py       # Batch CSV import preview modal
+│   ├── login_screen.py         # Card-based login screen
+│   ├── return_dialog.py        # Refund processing & restocking modal
+│   └── theme_helper.py         # Light/Dark table styling helper
+├── auth.py                     # PBKDF2 password hashing & authentication logic
+├── database.py                 # SQLite database schema, queries & analytics
+├── inventory.py                # Inventory logic & ReportLab PDF invoice generation
+├── inventory.db                # SQLite database file
+├── main.py                     # Application entry point
+├── requirements.txt            # Python dependencies
+├── RunMe.bat                   # One-click Windows launcher
+├── USER_MANUAL.md              # Detailed end-user manual
+└── .gitignore                  # Git ignore rules
 ```
-main.py              → App entry point
-database.py          → SQLite operations & analytics queries
-auth.py              → Authentication & password hashing
-inventory.py         → Inventory logic layer & PDF invoice generation
-invoices/            → Generated PDF invoices saved here
-ui/
-  login_screen.py    → Login UI
-  admin_dashboard.py → Admin panel with sales dashboard
-  cashier_view.py    → Cashier checkout with cart system
-```
+
+---
 
 ## Dependencies
 
-- `customtkinter` — Modern UI framework
-- `reportlab` — PDF invoice generation
+- **`customtkinter`**: Modern desktop UI framework
+- **`reportlab`**: Vector PDF invoice generation
+- **`Pillow`**: Image processing & rounded mask rendering for UI assets
+- **`sqlite3`**: Built-in transactional database engine
